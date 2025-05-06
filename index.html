@@ -95,26 +95,31 @@
             <p>
                 The dataset originates from the <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a> project,
                 a data pipeline designed for collecting and analyzing sentiment from Reddit and Steam game posts.
+                The dataset was extracted by this timeframe: March 30 - April 30  (about 30 days).
+            </p>
+            <p>
                 Data is collected via web scraping and stored in an AWS database. Access to this database was provided by the project author.
             </p>
-            <p>
-                Sentiment labels (<code>POSITIVE</code>, <code>NEGATIVE</code>, <code>NEUTRAL</code>, <code>MIXED</code>) are assigned to each post
+        </section>
+        
+        <section>
+            <h2>Key Metrics:</h2>
+            <p><ul>
+                <li>Sentiment labels (<code>POSITIVE</code>, <code>NEGATIVE</code>, <code>NEUTRAL</code>, <code>MIXED</code>) are assigned 
+                to each post
                 through Natural Language Processing (NLP) techniques, typically involving machine learning models
-                trained to classify text based on emotional tone. Please refer to the original author's project.
-            </p>
-            <p>
-                The "emotional divergence level" (derived from the original project's controversy score)
+                trained to classify text based on emotional tone. Please refer to the original author's project.</li>
+
+                <li>The "emotional divergence level" (derived from the original project's controversy score)
                 quantifies the degree of mixed or conflicting sentiment surrounding a game title.
                 It is calculated based on the distribution of daily average sentiment scores,
                 giving higher weight to days where positive and negative sentiments are closely balanced,
-                indicating a higher level of divergence.
-            </p>
+                indicating a higher level of divergence.</li>
+            </ul></p>
         </section>
-
+        
         <section>
             <h2>Data Visualization Showcase</h2>
-            <p>Below are embedded dashboards from Tableau Public:</p>
-
             <h3>Dashboard 1: Metrics of All Games</h3>
             <p>Analyze aggregated metrics and compare emotional divergence levels across all game titles.</p>
             <div class='tableauPlaceholder' id='viz1746515840501' style='position: relative'>
