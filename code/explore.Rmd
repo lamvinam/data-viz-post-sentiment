@@ -1,0 +1,201 @@
+---
+title: "sentiment_dataset_exploration"
+output: html_notebook
+author: "Lam Vi Nam"
+date: "2025-05-02"
+css: custom_styles.css
+---
+
+### Prepare Environment
+```{r}
+library(tidyverse)
+library(dm)
+library(lubridate)
+library(forcats)
+library(skimr)
+```
+### Read files
+```{r read_files}
+# read clean csv files
+source("../code/customized_functions/read_files_by_path.R") # load user function for reading csv files
+path <- "../data_source/" # directory path containing csv files
+cleaned_tables <- read_files_by_path(directory_path = path)
+```
+```{r}
+# unpack list to objects
+list2env(cleaned_tables, envir = .GlobalEnv) 
+```
+
+
+
+##### *- Explore the table `sentiment`*
+``` {r cleaned_schema, fig.align = "left", fig.width = 3, fig.height = 3}
+# Draw all schema
+dm_obj <- dm(sentiment) 
+dm_draw(dm_obj, view_type="all",column_types = TRUE)
+```
+
+```{r}
+View(sentiment)
+```
+
+```{r}
+glimpse(sentiment)
+```
+```{r}
+head(sentiment)
+```
+
+```{r}
+# return unique values
+unique(sentiment$post_id)
+```
+```{r}
+# return count of unique values (how many unique values?)
+n_distinct(sentiment$post_id)
+```
+
+```{r}
+# explore unique values plus count
+sentiment  %>%
+  count(sentiment)
+```
+
+```{r}
+# explore unique values of multiple columns
+selected_columns <- sentiment %>% 
+  select(sentiment, sentiment_score_mixed,
+         sentiment_score_positive, sentiment_score_neutral,
+         sentiment_score_negative) # extract interested cols
+
+unique_values <- selected_columns  %>%
+  map(unique) %>%
+  map(sort, decreasing = TRUE)
+unique_values
+```
+
+```{r}
+# test sums all equal 1
+test_sum <- selected_columns %>%
+  mutate(sum_col_2_to_5 = rowSums(.[, 2:5]))
+unique(test_sum$sum_col_2_to_5) == 1
+```
+
+<br><br>
+
+##### *- Transformation - pivot long*
+
+```{r}
+# Pivot the sentiment score columns
+sentiment_pivoted <- sentiment %>%
+  # Pivot the sentiment score columns
+  pivot_longer(
+    cols = c(sentiment_score_mixed, sentiment_score_positive,
+             sentiment_score_neutral, sentiment_score_negative),
+    names_to = "sentiment_type", # New column for the score type name
+    values_to = "score"          # New column for the score value
+  )
+```
+
+```{r}
+# export sentiment_pivoted to a file Tableau can read (e.g., CSV, Hyper)
+write.csv(sentiment_pivoted, "sentiment_pivot_long.csv", row.names = FALSE)
+```
+
+<br><br>
+
+##### *- Transformation - replicate controversy_score *
+
+```{r}
+# Step 1: Create the intermediate tibble with daily sentiment results and dominance/battle indicators
+sentiment_daily_result <- sentiment %>%
+  # Ensure created_at is treated as datetime and extract date
+  mutate(date = date(created_at)) %>%
+  # Group by keyword and date
+  group_by(keyword, date) %>%
+  summarise(
+    # Calculate daily average sentiment scores
+    avg_pos = mean(sentiment_score_positive, na.rm = TRUE),
+    avg_neg = mean(sentiment_score_negative, na.rm = TRUE),
+    avg_mix = mean(sentiment_score_mixed, na.rm = TRUE),
+    avg_neutral = mean(sentiment_score_neutral, na.rm = TRUE),
+    # Calculate daily total post count
+    daily_total_post_count = n(),
+    # Determine daily type based on average scores
+    pos_dominant_day = if_else(avg_pos > avg_neg + 0.1, 1, 0),
+    neg_dominant_day = if_else(avg_neg > avg_pos + 0.1, 1, 0),
+    close_battle_day = if_else(abs(avg_pos - avg_neg) <= 0.1, 1, 0),
+    .groups = 'drop' # Drop grouping after summarise
+  )
+View(sentiment_daily_result)
+```
+```{r}
+# Step 2: Aggregate daily results to calculate controversy score
+controversy_score <- sentiment_daily_result %>%
+  # Group by keyword again for final aggregation
+  group_by(keyword) %>%
+  summarise(
+    # Sum the daily indicators to get total days of each type
+    pos_dominant_days = sum(pos_dominant_day, na.rm = TRUE),
+    neg_dominant_days = sum(neg_dominant_day, na.rm = TRUE),
+    close_battle_days = sum(close_battle_day, na.rm = TRUE),
+    # Count the number of active days for the keyword
+    active_days_of_keyword = n(),
+    # Sum the daily total counts to get total post count for the keyword
+    total_post_count = sum(daily_total_post_count, na.rm = TRUE),
+    .groups = 'drop' # Drop grouping after summarise
+  ) %>%
+  # Filter keywords with low counts or no active days as in the source code
+  filter(total_post_count > 20, active_days_of_keyword > 0) %>%
+  mutate(
+    # Calculate Ratios
+    # Use case_when to handle division by zero for ratios if active_days_of_keyword somehow became 0 after filtering (shouldn't happen with filter > 0, but good practice)
+    pos_dominant_ratio = case_when(
+        active_days_of_keyword > 0 ~ pos_dominant_days / active_days_of_keyword,
+        TRUE ~ 0
+    ),
+    neg_dominant_ratio = case_when(
+        active_days_of_keyword > 0 ~ neg_dominant_days / active_days_of_keyword,
+        TRUE ~ 0
+    ),
+    close_battle_ratio = case_when(
+        active_days_of_keyword > 0 ~ close_battle_days / active_days_of_keyword,
+        TRUE ~ 0
+    )
+  ) %>%
+  mutate(
+    # Calculate denominator using the formula
+    denominator = (neg_dominant_ratio * 0.275) +
+                  (pos_dominant_ratio * 0.275) +
+                  (close_battle_ratio * 0.45),
+    # Calculate score using the formula
+    # Use case_when to handle division by zero if denominator is 0
+    score = case_when(
+        denominator > 0 ~ (close_battle_ratio * 0.45 * 100) / denominator,
+        TRUE ~ 0
+    )
+  ) %>%
+  # Select the requested columns plus key components for clarity
+  select(
+    keyword,
+    pos_dominant_days,
+    neg_dominant_days,
+    close_battle_days,
+    active_days_of_keyword,
+    total_post_count, # Included for context and filtering clarity
+    pos_dominant_ratio, # Included for clarity
+    neg_dominant_ratio, # Included for clarity
+    close_battle_ratio, # Included for clarity
+    denominator,
+    score
+  )
+View(controversy_score)
+```
+```{r}
+# export controversy_score to a file Tableau can read (e.g., CSV, Hyper)
+write.csv(controversy_score, "controversy_score.csv", row.names = FALSE)
+```
+
+
+
+
