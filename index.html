@@ -67,17 +67,19 @@
 
         <section>
             <h2>Project Purpose</h2>
-            <p>
+            <p>This mini visulization project aims to address these key questions:
+            <ul>
+                <li>What are the overall sentiment trends (positive, negative, neutral, mixed) for a specific game title over time?</li>
+                <li>How does the "emotional divergence level" vary across different game titles based on the sentiment distribution of posts?</li>
+            </ul>
+            The dataset was extracted by this timeframe: March 30 - April 30  (about 30 days).</p>
+            <p> <h3>Background</h3>
                 This project presents a standalone data visualization of social media sentiment regarding various game titles.
                 It complements the original author's project, <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a>,
                 which focuses on building a data pipeline and includes its own web application interface available at
                 <a href="https://sentimental-web.vercel.app/" target="_blank">sentimental-web.vercel.app</a>.
             </p>
-            <p>This visualization aims to address key questions:</p>
-            <ul>
-                <li>What are the overall sentiment trends (positive, negative, neutral, mixed) for a specific game title over time?</li>
-                <li>How does the "emotional divergence level" vary across different game titles based on the sentiment distribution of posts?</li>
-            </ul>
+
         </section>
 
         <section>
@@ -93,28 +95,29 @@
         <section>
             <h2>Dataset Origin</h2>
             <p>
-                The dataset originates from the <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a> project,
+                The dataset originates from the project <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a>,
                 a data pipeline designed for collecting and analyzing sentiment from Reddit and Steam game posts.
-                The dataset was extracted by this timeframe: March 30 - April 30  (about 30 days).
             </p>
             <p>
-                Data is collected via web scraping and stored in an AWS database. Access to this database was provided by the project author.
+                Access to this database was provided by the project author.
             </p>
         </section>
         
         <section>
-            <h2>Key Metrics:</h2>
+            <h2>Key Metrics</h2>
             <p><ul>
                 <li>Sentiment labels (<code>POSITIVE</code>, <code>NEGATIVE</code>, <code>NEUTRAL</code>, <code>MIXED</code>) are assigned 
                 to each post
                 through Natural Language Processing (NLP) techniques, typically involving machine learning models
-                trained to classify text based on emotional tone. Please refer to the original author's project.</li>
+                trained to classify text based on emotional tone.</li>
 
                 <li>The "emotional divergence level" (derived from the original project's controversy score)
                 quantifies the degree of mixed or conflicting sentiment surrounding a game title.
                 It is calculated based on the distribution of daily average sentiment scores,
                 giving higher weight to days where positive and negative sentiments are closely balanced,
                 indicating a higher level of divergence.</li>
+
+                <li> Please refer to the original author's project for more information.</li>
             </ul></p>
         </section>
         
