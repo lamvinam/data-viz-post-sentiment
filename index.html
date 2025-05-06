@@ -3,59 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tableau Visualization Portfolio</title>
+    <title>Data Visualization Portfolio - Sentiment Analysis</title>
     <style>
         body {
             font-family: sans-serif;
             line-height: 1.6;
             margin: 20px;
-            text-align: center; /* Center content if desired */
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 30px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
         }
         .tableauPlaceholder {
             margin: 20px auto; /* Center the Tableau viz block */
             max-width: 100%; /* Ensure it doesn't overflow */
+            border: 1px solid #ccc; /* Optional border */
+            border-radius: 8px; /* Optional rounded corners */
+            overflow: hidden; /* Prevents content spilling out */
         }
-        h1 {
-            color: #333;
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        code {
+            background-color: #e9e9e9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <h1>My Interactive Data Visualization</h1>
+    <div class="container">
 
-    <p>Here is a visualization embedded from Tableau Public:</p>
+        <h1>Sentiment Analysis Data Visualization Project</h1>
 
-    <div class='tableauPlaceholder' id='viz1746515840501' style='position: relative'>
-        <noscript>
-            <a href='#'><img alt='DB_all ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_all&#47;1_rss.png' style='border: none' /></a>
-        </noscript>
-        <object class='tableauViz'  style='display:none;'>
-            <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
-            <param name='embed_code_version' value='3' />
-            <param name='site_root' value='' />
-            <param name='name' value='Book1_17465140115470&#47;DB_all' />
-            <param name='tabs' value='no' />
-            <param name='toolbar' value='yes' />
-            <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_all&#47;1.png' />
-            <param name='animate_transition' value='yes' />
-            <param name='display_static_image' value='yes' />
-            <param name='display_spinner' value='yes' />
-            <param name='display_overlay' value='yes' />
-            <param name='display_count' value='yes' />
-            <param name='language' value='en-US' />
-        </object>
+        <section>
+            <h2>Project Purpose</h2>
+            <p>
+                This project presents a standalone data visualization of social media sentiment regarding various game titles.
+                It complements the original author's project, <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a>,
+                which focuses on building a data pipeline and includes its own web application interface available at
+                <a href="https://sentimental-web.vercel.app/" target="_blank">sentimental-web.vercel.app</a>.
+            </p>
+            <p>This visualization aims to address key questions:</p>
+            <ul>
+                <li>What are the overall sentiment trends (positive, negative, neutral, mixed) for a specific game title over time?</li>
+                <li>How does the "emotional divergence level" vary across different game titles based on the sentiment distribution of posts?</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Tools Utilized</h2>
+            <p>The project workflow involved:</p>
+            <ul>
+                <li>Data extraction and initial exploration using <code>R</code> and <code>R notebook</code>.</li>
+                <li>Data transformation, including the calculation of the emotional divergence score, performed in <code>R</code>.</li>
+                <li>Interactive data visualization developed using <code>Tableau</code>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Dataset Origin</h2>
+            <p>
+                The dataset originates from the <a href="https://github.com/tcd93/sentimental" target="_blank">sentimental</a> project,
+                a data pipeline designed for collecting and analyzing sentiment from Reddit and Steam game posts.
+                Data is collected via web scraping and stored in an AWS database. Access to this database was provided by the project author.
+            </p>
+            <p>
+                Sentiment labels (`POSITIVE`, `NEGATIVE`, `NEUTRAL`, `MIXED`) are assigned to each post
+                through Natural Language Processing (NLP) techniques, typically involving machine learning models
+                trained to classify text based on emotional tone.
+            </p>
+            <p>
+                The "emotional divergence level" (derived from the original project's controversy score)
+                quantifies the degree of mixed or conflicting sentiment surrounding a game title.
+                It is calculated based on the distribution of daily average sentiment scores,
+                giving higher weight to days where positive and negative sentiments are closely balanced,
+                indicating a higher level of divergence.
+            </p>
+        </section>
+
+        <section>
+            <h2>Data Visualization Showcase</h2>
+            <p>Below are embedded dashboards from Tableau Public:</p>
+
+            <h3>Dashboard 1: Metrics of All Games</h3>
+            <p>Explore detailed sentiment trends and metrics for individual game titles over time.</p>
+            <div class='tableauPlaceholder' id='viz1746515840501' style='position: relative'>
+                <noscript>
+                    <a href='#'><img alt='DB_all ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_all&#47;1_rss.png' style='border: none' /></a>
+                </noscript>
+                <object class='tableauViz'  style='display:none;'>
+                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='' />
+                    <param name='name' value='Book1_17465140115470&#47;DB_all' /> <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_all&#47;1.png' />
+                    <param name='animate_transition' value='yes' />
+                    <param name='display_static_image' value='yes' />
+                    <param name='display_spinner' value='yes' />
+                    <param name='display_overlay' value='yes' />
+                    <param name='display_count' value='yes' />
+                    <param name='language' value='en-US' />
+                </object>
+            </div>
+            <script type='text/javascript'>
+                var divElement = document.getElementById('viz1746515840501');
+                var vizElement = divElement.getElementsByTagName('object')[0];
+                // Adjust width/height based on responsive needs - using code from your snippet
+                if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1829px';vizElement.style.height='838px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1829px';vizElement.style.height='838px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+            <h3>Dashboard 2: Metrics of Single Games</h3>
+            <p>Analyze aggregated metrics and compare emotional divergence levels across all game titles.</p>
+            <div class="tableauPlaceholder" style="text-align: center; padding: 50px;">
+                <div class='tableauPlaceholder' id='viz1746519745312' style='position: relative'>
+                    <noscript><a href='#'><img alt='DB_single_item ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_single_item&#47;1_rss.png' style='border: none' /></a>
+                    </noscript>
+                    <object class='tableauViz'  style='display:none;'>
+                        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+                        <param name='embed_code_version' value='3' /> 
+                        <param name='site_root' value='' />
+                        <param name='name' value='Book1_17465140115470&#47;DB_single_item' />
+                        <param name='tabs' value='no' />
+                        <param name='toolbar' value='yes' />
+                        <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book1_17465140115470&#47;DB_single_item&#47;1.png' /> 
+                        <param name='animate_transition' value='yes' />
+                        <param name='display_static_image' value='yes' />
+                        <param name='display_spinner' value='yes' />
+                        <param name='display_overlay' value='yes' />
+                        <param name='display_count' value='yes' />
+                        <param name='language' value='en-US' />
+                    </object>
+                </div>                
+            </div>
+            <script type='text/javascript'>                    
+                var divElement = document.getElementById('viz1746519745312');                    
+                var vizElement = divElement.getElementsByTagName('object')[0];                    
+                if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1629px';vizElement.style.height='538px';} 
+                else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1629px';vizElement.style.height='538px';} 
+                else { vizElement.style.width='100%';vizElement.style.height='827px';}                     
+                var scriptElement = document.createElement('script');                    
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+            </script>
+         </section>
+
+        <section>
+            <h2>Links</h2>
+            <ul>
+                <li><strong>Full Tableau Workbook:</strong> <a href="https://public.tableau.com/app/profile/nam.lam/viz/Book1_17465140115470/DB_single_item" target="_blank">Tableau Public Profile</a> (Link points to the single item dashboard as provided)</li>
+                <li><strong>Project Code:</strong> <a href="https://github.com/lamvinam/data-viz-post-sentiment" target="_blank">GitHub Repository</a></li>
+            </ul>
+        </section>
+
     </div>
-    <script type='text/javascript'>
-        var divElement = document.getElementById('viz1746515840501');
-        var vizElement = divElement.getElementsByTagName('object')[0];
-        // Adjust width/height based on responsive needs - the code below is from your snippet
-        if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1829px';vizElement.style.height='838px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1829px';vizElement.style.height='838px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}
-        var scriptElement = document.createElement('script');
-        scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
-        vizElement.parentNode.insertBefore(scriptElement, vizElement);
-    </script>
-    <p>You can interact with the visualization directly above.</p>
 
 </body>
 </html>
